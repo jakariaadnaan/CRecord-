@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Call Recorder</title>
+<meta name="theme-color" content="#F2F3F5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-rstate="idle">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 8h9M17 8h3M4 16h3M11 16h9"/><circle cx="15" cy="8" r="2"/><circle cx="9" cy="16" r="2"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.8 6.8 19.6l1-5.8L3.5 9.7l5.9-.9L12 3.5z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="3.6" height="14" rx="1.2" fill="currentColor"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5z" fill="currentColor"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.6 2.2c-.8.5-1.2 1-1.2 1.8M12 17h.01"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 19h14"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 3.5h4M6.5 7l.8 12a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.8-12M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17v3zM14.5 7.5l3 3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+    <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-back10" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.6-5.9M4 5v4.5h4.5"/><text x="12" y="15.4" text-anchor="middle" font-size="7.5" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui,sans-serif">10</text></symbol>
+    <symbol id="i-fwd10" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 5v4.5h-4.5"/><text x="12" y="15.4" text-anchor="middle" font-size="7.5" font-weight="700" fill="currentColor" stroke="none" font-family="system-ui,sans-serif">10</text></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M6 21V4"/><path d="M6 4h11l-2.5 4 2.5 4H6"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2.5"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></symbol>
+    <symbol id="i-backspace" viewBox="0 0 24 24"><path d="M9 5h10a1.5 1.5 0 0 1 1.5 1.5v11A1.5 1.5 0 0 1 19 19H9l-5.5-7L9 5zM12 9.5l5 5M17 9.5l-5 5"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></symbol>
+    <symbol id="i-storage" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 7h12M15 3l4 4-4 4M17 17H5M9 13l-4 4 4 4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  </defs>
+</svg>
+
+<div id="lock" class="lock" hidden>
+  <div class="lock-in">
+    <div class="lock-ic"><svg class="i"><use href="#i-lock"/></svg></div>
+    <h2 id="lockTitle" data-i18n="enterPin">Enter PIN</h2>
+    <div id="pinDots" class="dots" aria-hidden="true"></div>
+    <p id="pinErr" class="err" role="alert"></p>
+    <div id="keypad" class="keypad"></div>
+    <div id="patPad" hidden></div>
+    <button id="bioBtn" class="btn sm bio" type="button" hidden data-i18n="bioUse">Use fingerprint</button>
+  </div>
+</div>
+
+<div id="app">
+  <header class="appbar" id="appbar">
+    <h1 id="screenTitle">Record</h1>
+    <button id="installBtn" class="pill" type="button" hidden data-i18n="installApp">Install app</button>
+  </header>
+
+  <button id="liveBar" class="livebar" type="button" hidden>
+    <span class="dot"></span>
+    <span id="liveText" class="grow"></span>
+    <span id="liveTime" class="t">00:00</span>
+  </button>
+
+  <main id="screens">
+
+    <!-- Record -->
+    <section id="screen-record" class="screen">
+      <div class="who">
+        <span id="whoAvatar" class="avatar">?</span>
+        <input id="contactName" list="nameList" data-i18n-ph="contactPh" data-i18n-aria="contactAria" placeholder="Contact name" aria-label="Contact name" autocomplete="off" autocapitalize="words" maxlength="60">
+        <button id="pickBtn" class="icon-btn" type="button" data-i18n-aria="pickContact" aria-label="Choose from contacts"><svg class="i"><use href="#i-person"/></svg></button>
+      </div>
+      <datalist id="nameList"></datalist>
+      <div id="recentNames" class="chips" hidden></div>
+
+      <div class="stage">
+        <div class="status"><span class="dot"></span><span id="statusText">Ready</span></div>
+        <div id="timer" class="timer">00:00</div>
+        <canvas id="wave" aria-hidden="true"></canvas>
+      </div>
+
+      <div class="controls">
+        <button id="pauseBtn" class="circle" type="button" aria-label="Pause" disabled><svg class="i"><use href="#i-pause"/></svg></button>
+        <button id="recBtn" class="recbtn" type="button" aria-label="Start recording"><span class="core"></span></button>
+        <div class="cell3">
+          <button id="helpBtn" class="circle" type="button" data-i18n-aria="howToRecord" aria-label="How to record a call"><svg class="i"><use href="#i-help"/></svg></button>
+          <button id="markBtn" class="circle" type="button" data-i18n-aria="markAria" aria-label="Add marker"><svg class="i"><use href="#i-flag"/></svg></button>
+        </div>
+      </div>
+      <p class="note" data-i18n="recordNote">Use speakerphone and keep this screen on while you record.</p>
+    </section>
+
+    <!-- Recordings -->
+    <section id="screen-library" class="screen" hidden>
+      <div id="libTools" class="tools">
+        <label class="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input id="search" type="search" data-i18n-ph="searchPh" data-i18n-aria="searchAria" placeholder="Search name or date" aria-label="Search recordings" autocomplete="off">
+        </label>
+        <div class="seg" role="group" data-i18n-aria="filterAria" aria-label="Filter">
+          <button id="segAll" type="button" aria-pressed="true" data-i18n="segAll">All</button>
+          <button id="segFav" type="button" aria-pressed="false" data-i18n="segFav">Favourites</button>
+        </div>
+        <div class="sortrow">
+          <select id="sortSel" data-i18n-aria="sortLabel" aria-label="Sort">
+            <option value="new" data-i18n="sortNew">Newest first</option>
+            <option value="old" data-i18n="sortOld">Oldest first</option>
+            <option value="name" data-i18n="sortName">Name A to Z</option>
+            <option value="long" data-i18n="sortLong">Longest first</option>
+          </select>
+          <button id="groupBtn" class="chipbtn" type="button" aria-pressed="false" data-i18n="groupBtn">Group by contact</button>
+        </div>
+      </div>
+      <div id="count" class="count"></div>
+      <ul id="list" class="list"></ul>
+
+      <div id="emptyAll" class="empty">
+        <div class="badge-ic"><svg class="i"><use href="#i-mic"/></svg></div>
+        <h2 data-i18n="emptyTitle">No recordings yet</h2>
+        <p data-i18n="emptyText">Recordings you save appear here, newest first.</p>
+        <button id="emptyGo" class="btn primary" type="button" data-i18n="startRecording">Start recording</button>
+      </div>
+      <div id="emptyNone" class="empty" hidden>
+        <h2 data-i18n="nothingFound">Nothing found</h2>
+        <p data-i18n="tryDifferent">Try a different name or date.</p>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="screen-settings" class="screen" hidden>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="recording">
+            <svg class="i"><use href="#i-mic"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgRecording">Recording</span><span id="subRecording" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="appearance">
+            <svg class="i"><use href="#i-sun"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgAppearance">Appearance and language</span><span id="subAppearance" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="storage">
+            <svg class="i"><use href="#i-storage"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgStorage">Storage</span><span id="subStorage" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+          <button class="line" type="button" data-page="data">
+            <svg class="i"><use href="#i-swap"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgData">Import and export</span><span class="line-sub" data-i18n="subData">Backup file</span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="backup">
+            <svg class="i"><use href="#i-upload"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgBackup">Backup</span><span id="subBackup" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button id="notifSwitch" class="line" type="button" role="switch" aria-checked="false">
+            <svg class="i"><use href="#i-info"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="notifTitle">Notifications</span><span id="subNotif" class="line-sub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="security">
+            <svg class="i"><use href="#i-lock"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgSecurity">Security</span><span id="subSecurity" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button class="line" type="button" data-page="about">
+            <svg class="i"><use href="#i-info"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="pgAbout">About</span><span id="subAbout" class="line-sub"></span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <button class="tab" type="button" data-tab="record" aria-current="page"><svg class="i"><use href="#i-mic"/></svg><span class="badge"></span><span data-i18n="tabRecord">Record</span></button>
+    <button class="tab" type="button" data-tab="library"><svg class="i"><use href="#i-list"/></svg><span data-i18n="tabRecordings">Recordings</span></button>
+    <button class="tab" type="button" data-tab="settings"><svg class="i"><use href="#i-sliders"/></svg><span data-i18n="tabSettings">Settings</span></button>
+  </nav>
+
+  <!-- Settings sub pages -->
+  <section id="page-recording" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgRecording">Recording</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <h2 data-i18n="qualityLabel">qualityLabel</h2>
+        <div class="seg" role="group" data-set="quality" data-i18n-aria="qualityLabel" aria-label="qualityLabel"><button type="button" data-val="low" aria-pressed="false" data-i18n="q_low">Low</button><button type="button" data-val="std" aria-pressed="false" data-i18n="q_std">Standard</button><button type="button" data-val="high" aria-pressed="false" data-i18n="q_high">High</button></div>
+      </div>
+      <p class="hint pad-hint" data-i18n="qualityHint">Higher quality makes bigger files.</p>
+      <div class="group">
+        <h2 data-i18n="countdownLabel">countdownLabel</h2>
+        <div class="seg" role="group" data-set="countdown" data-i18n-aria="countdownLabel" aria-label="countdownLabel"><button type="button" data-val="0" aria-pressed="false" data-i18n="optOff">Off</button><button type="button" data-val="3" aria-pressed="false"></button><button type="button" data-val="5" aria-pressed="false"></button></div>
+      </div>
+      <div class="group"><div class="panel">
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="vibrate">
+            <span class="grow"><span class="line-title" data-i18n="vibrateLabel">vibrateLabel</span><span class="line-sub" data-i18n="vibrateSub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+      </div></div>
+      <div class="group">
+        <h2 data-i18n="micLabel">Microphone processing</h2>
+        <div class="panel">
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="agc">
+            <span class="grow"><span class="line-title" data-i18n="agcLabel">agcLabel</span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="noise">
+            <span class="grow"><span class="line-title" data-i18n="noiseLabel">noiseLabel</span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="echo">
+            <span class="grow"><span class="line-title" data-i18n="echoLabel">echoLabel</span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p class="hint" data-i18n="micHint">For speakerphone calls, keep noise suppression and echo cancellation off, or the other person's voice can be removed.</p>
+      </div>
+      <div class="group">
+        <h2 data-i18n="maxLabel">maxLabel</h2>
+        <div class="seg" role="group" data-set="maxMin" data-i18n-aria="maxLabel" aria-label="maxLabel"><button type="button" data-val="0" aria-pressed="false" data-i18n="optOff">Off</button><button type="button" data-val="30" aria-pressed="false"></button><button type="button" data-val="60" aria-pressed="false"></button><button type="button" data-val="120" aria-pressed="false"></button></div>
+      </div>
+      <div class="group">
+        <h2 data-i18n="silenceLabel">silenceLabel</h2>
+        <div class="seg" role="group" data-set="silenceMin" data-i18n-aria="silenceLabel" aria-label="silenceLabel"><button type="button" data-val="0" aria-pressed="false" data-i18n="optOff">Off</button><button type="button" data-val="1" aria-pressed="false"></button><button type="button" data-val="2" aria-pressed="false"></button><button type="button" data-val="5" aria-pressed="false"></button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-backup" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgBackup">Backup</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <div class="panel">
+          <div class="line">
+            <div class="grow"><span class="line-title" data-i18n="drvTitle">Google Drive</span><span id="drvStatus" class="line-sub"></span></div>
+            <button id="drvConnect" class="btn sm" type="button"></button>
+          </div>
+          <div class="line">
+            <div class="grow"><span id="drvQueue" class="line-sub"></span></div>
+            <button id="drvNow" class="btn sm" type="button" data-i18n="drvNow">Back up now</button>
+          </div>
+        </div>
+      </div>
+      <div class="group">
+        <h2 data-i18n="drvOptions">Options</h2>
+        <div class="panel">
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="drvAuto">
+            <span class="grow"><span class="line-title" data-i18n="drvAuto"></span><span class="line-sub" data-i18n="drvAutoSub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="drvWifi">
+            <span class="grow"><span class="line-title" data-i18n="drvWifi"></span><span class="line-sub" data-i18n="drvWifiSub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+          <button class="line" type="button" role="switch" aria-checked="false" data-set="drvFav">
+            <span class="grow"><span class="line-title" data-i18n="drvFav"></span><span class="line-sub" data-i18n="drvFavSub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+      <div class="group">
+        <h2 data-i18n="drvIdLabel">Google Client ID</h2>
+        <div class="panel">
+          <div class="line">
+            <input id="drvClient" class="txt" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-ph="drvIdPh" data-i18n-aria="drvIdLabel" placeholder="xxxx.apps.googleusercontent.com" aria-label="Google Client ID">
+            <button id="drvSaveId" class="btn sm" type="button" data-i18n="drvIdSave">Save</button>
+          </div>
+        </div>
+        <p class="hint" data-i18n="drvIdHint"></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-appearance" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgAppearance">Appearance and language</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <h2 data-i18n="themeLabel">Theme</h2>
+        <div class="seg" role="group" data-i18n-aria="themeLabel" aria-label="Theme">
+          <button type="button" data-theme-val="auto" aria-pressed="true" data-i18n="themeAuto">Auto</button>
+          <button type="button" data-theme-val="light" aria-pressed="false" data-i18n="themeLight">Light</button>
+          <button type="button" data-theme-val="dark" aria-pressed="false" data-i18n="themeDark">Dark</button>
+        </div>
+      </div>
+      <div class="group">
+        <h2 data-i18n="langLabel">Language</h2>
+        <div class="seg" role="group" data-i18n-aria="langLabel" aria-label="Language">
+          <button type="button" data-lang-val="en" aria-pressed="true" lang="en">English</button>
+          <button type="button" data-lang-val="bn" aria-pressed="false" lang="bn">বাংলা</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-storage" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgStorage">Storage</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <h2 data-i18n="locTitle">Where recordings are saved</h2>
+        <div class="panel">
+          <div class="line"><div class="grow"><span class="line-sub" data-i18n="locText"></span></div></div>
+          <button id="persistSwitch" class="line" type="button" role="switch" aria-checked="false">
+            <span class="grow"><span class="line-title" data-i18n="persistLabel"></span><span class="line-sub" data-i18n="persistSub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+          <div class="line">
+            <div class="grow"><span class="line-title" data-i18n="folderLabel"></span><span id="folderSub" class="line-sub"></span></div>
+            <button id="folderClear" class="btn sm text-danger" type="button" hidden data-i18n="folderClear">Remove</button>
+            <button id="folderBtn" class="btn sm" type="button" data-i18n="folderChoose">Choose</button>
+          </div>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <div class="line">
+            <div class="stack">
+              <div class="meter"><div id="storageBar"></div></div>
+              <div id="storageText" class="line-sub"></div>
+              <div id="recSize" class="line-sub"></div>
+              <div id="fmtText" class="line-sub"></div>
+            </div>
+          </div>
+          <div class="line">
+            <div class="grow"><span class="line-title" data-i18n="deleteOlder">Delete older than</span><span class="line-sub" data-i18n="favKept">Favourites are kept</span></div>
+            <input id="cleanDays" class="num" type="number" min="1" value="30" inputmode="numeric" data-i18n-aria="daysAria" aria-label="Days">
+            <span class="line-sub" data-i18n="days">days</span>
+            <button id="cleanBtn" class="btn sm text-danger" type="button" data-i18n="delete">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-data" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgData">Import and export</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <div class="panel">
+          <button id="exportBtn" class="line" type="button">
+            <svg class="i"><use href="#i-download"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="exportBackup">Export backup</span><span class="line-sub" data-i18n="exportSub">Save all recordings to one file</span></span>
+          </button>
+          <button id="importAudioBtn" class="line" type="button">
+            <svg class="i"><use href="#i-upload"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="importAudio">Import audio files</span><span class="line-sub" data-i18n="importAudioSub">Add recordings saved on your phone</span></span>
+          </button>
+          <button id="importBtn" class="line" type="button">
+            <svg class="i"><use href="#i-upload"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="importBackup">Import backup</span><span class="line-sub" data-i18n="importSub">Restore from a backup file</span></span>
+          </button>
+        </div>
+        <p class="hint" data-i18n="backupHint">Recordings are stored only in this browser. Clearing the site data deletes them, so export a backup now and then.</p>
+        <input id="importFile" type="file" accept="application/json,.json" hidden>
+        <input id="importAudioFile" type="file" accept="audio/*,.m4a,.mp3,.wav,.aac,.amr,.ogg,.opus,.3gp,.flac" multiple hidden>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-security" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgSecurity">Security</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <div class="panel">
+          <div class="line">
+            <svg class="i"><use href="#i-lock"/></svg>
+            <div class="grow"><span class="line-title" data-i18n="pinLock">PIN lock</span><span id="pinSub" class="line-sub"></span></div>
+            <button id="removePin" class="btn sm text-danger" type="button" hidden data-i18n="remove">Remove</button>
+            <button id="setPin" class="btn sm" type="button">Set PIN</button>
+          </div>
+          <div class="line">
+            <svg class="i"><use href="#i-lock"/></svg>
+            <div class="grow"><span class="line-title" data-i18n="patLock">Pattern lock</span><span id="patSub" class="line-sub"></span></div>
+            <button id="removePat" class="btn sm text-danger" type="button" hidden data-i18n="remove">Remove</button>
+            <button id="setPat" class="btn sm" type="button">Set pattern</button>
+          </div>
+          <button id="bioSwitch" class="line" type="button" role="switch" aria-checked="false">
+            <svg class="i"><use href="#i-lock"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="bioLabel">Fingerprint unlock</span><span id="bioSub" class="line-sub"></span></span>
+            <span class="sw" aria-hidden="true"></span>
+          </button>
+        </div>
+        <p class="hint" data-i18n="lockHint">Only one lock is active at a time. A new PIN or pattern replaces the old one. The lock keeps casual visitors out; it does not encrypt your recordings.</p>
+      </div>
+      <div class="group" id="lockOpts">
+        <h2 data-i18n="autoLockLabel">Lock the app after</h2>
+        <div class="seg" role="group" data-set="lockAfter" data-i18n-aria="autoLockLabel" aria-label="Auto lock">
+          <button type="button" data-val="0" aria-pressed="false" data-i18n="lockImmediately">Immediately</button>
+          <button type="button" data-val="1" aria-pressed="false"></button>
+          <button type="button" data-val="5" aria-pressed="false"></button>
+        </div>
+      </div>
+      <div class="group">
+        <div class="panel">
+          <button id="lockNowBtn" class="line" type="button">
+            <svg class="i"><use href="#i-lock"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="lockNowBtn">Lock now</span></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-about" class="page" inert>
+    <div class="pagebar"><button class="icon-btn" type="button" data-back data-i18n-aria="back" aria-label="Back"><svg class="i"><use href="#i-back"/></svg></button><h1 data-i18n="pgAbout">About</h1></div>
+    <div class="pagebody">
+      <div class="group">
+        <div class="panel">
+          <div class="line">
+            <div class="grow"><span class="line-title" data-i18n="appName">Call Recorder</span><span id="aboutVersion" class="line-sub"></span></div>
+          </div>
+          <button id="aboutGuide" class="line" type="button">
+            <svg class="i"><use href="#i-help"/></svg>
+            <span class="grow"><span class="line-title" data-i18n="howToRecord">How to record a call</span></span>
+            <svg class="i chev"><use href="#i-chevron"/></svg>
+          </button>
+        </div>
+        <p class="hint" data-i18n="aboutText">Recordings stay in this browser. Nothing leaves your phone unless you export or share a file.</p>
+        <p class="hint" data-i18n="consentText">Let them know the call is being recorded. Many places require their consent. You are responsible for following the law where you live.</p>
+        <p class="hint" data-i18n="licenseText">MP3 export uses LAME (lame.sourceforge.net) through lamejs 1.2.1, licensed under LGPL-3.0. See lame.LICENSE.txt.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Player sheet -->
+<dialog id="playerSheet" class="sheet" aria-label="Player">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <div class="p-head">
+      <span id="pAvatar" class="avatar xl">?</span>
+      <div class="grow">
+        <div id="pName" class="p-name"></div>
+        <div id="pDate" class="p-date"></div>
+      </div>
+      <button id="pClose" class="icon-btn" type="button" data-i18n-aria="close" aria-label="Close"><svg class="i"><use href="#i-down"/></svg></button>
+    </div>
+    <div class="seek">
+      <input id="pSeek" type="range" min="0" max="1000" value="0" step="1" data-i18n-aria="seek" aria-label="Seek">
+      <div class="times"><span id="pCur">00:00</span><span id="pDur">00:00</span></div>
+    </div>
+    <div id="pMarks" class="marks" hidden></div>
+    <div class="p-controls">
+      <button id="pSpeed" class="plain" type="button" data-i18n-aria="speed" aria-label="Playback speed">1x</button>
+      <button id="pBack" class="plain" type="button" data-i18n-aria="back10" aria-label="Back 10 seconds"><svg class="i"><use href="#i-back10"/></svg></button>
+      <button id="pPlay" class="playbtn" type="button" aria-label="Play"><svg class="i"><use href="#i-play"/></svg></button>
+      <button id="pFwd" class="plain" type="button" data-i18n-aria="fwd10" aria-label="Forward 10 seconds"><svg class="i"><use href="#i-fwd10"/></svg></button>
+      <button id="pFav" class="plain" type="button" aria-label="Add favourite"><svg class="i"><use href="#i-star"/></svg></button>
+    </div>
+    <div class="panel">
+      <button id="pRename" class="line" type="button"><svg class="i"><use href="#i-edit"/></svg><span class="grow line-title" data-i18n="rename">Rename</span></button>
+      <button id="pShare" class="line" type="button" hidden><svg class="i"><use href="#i-upload"/></svg><span class="grow line-title" data-i18n="share">Share</span></button>
+      <button id="pMp3" class="line" type="button"><svg class="i"><use href="#i-swap"/></svg><span id="pMp3Txt" class="grow line-title" data-i18n="mp3Label">Save as MP3</span></button>
+      <button id="pDownload" class="line" type="button"><svg class="i"><use href="#i-download"/></svg><span class="grow line-title" data-i18n="download">Download</span></button>
+      <button id="pDelete" class="line bad" type="button"><svg class="i"><use href="#i-trash"/></svg><span class="grow line-title" data-i18n="delete">Delete</span></button>
+    </div>
+    <audio id="audioEl" preload="metadata"></audio>
+  </div>
+</dialog>
+
+<!-- Guide sheet -->
+<dialog id="guideSheet" class="sheet" aria-label="How to record a call">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <h2 data-i18n="howToRecord">How to record a call</h2>
+    <ol class="steps">
+      <li data-i18n="guide1">Choose the contact, or type a name.</li>
+      <li data-i18n="guide2">Start or answer the call and turn on speakerphone.</li>
+      <li data-i18n="guide3">Tap the red button. Keep this app open and the screen on.</li>
+      <li data-i18n="guide4">Tap the button again when the call ends. The recording is saved automatically.</li>
+    </ol>
+    <div class="sheet-actions"><button id="guideClose" class="btn primary" type="button" data-i18n="gotIt">Got it</button></div>
+  </div>
+</dialog>
+
+<!-- Consent sheet -->
+<dialog id="consentSheet" class="sheet" aria-label="Before you record">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <form method="dialog">
+      <h2 data-i18n="consentTitle">Tell the other person</h2>
+      <p data-i18n="consentText">Let them know the call is being recorded. Many places require their consent. You are responsible for following the law where you live.</p>
+      <div class="sheet-actions">
+        <button class="btn" value="cancel" data-i18n="cancel">Cancel</button>
+        <button class="btn primary" value="ok" data-i18n="iUnderstand">I understand</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Text input sheet (rename, PIN) -->
+<dialog id="textSheet" class="sheet" aria-label="Edit">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <form id="tsForm" method="dialog" autocomplete="off">
+      <h2 id="tsTitle"></h2>
+      <input id="tsInput" class="field" type="text" autocomplete="off">
+      <p id="tsErr" class="err" role="alert"></p>
+      <div class="sheet-actions">
+        <button id="tsCancel" class="btn" type="button" data-i18n="cancel">Cancel</button>
+        <button id="tsOk" class="btn primary" type="submit" value="ok">Save</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<!-- Confirm sheet -->
+<dialog id="patSheet" class="sheet" aria-label="Pattern">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <h2 id="patTitle"></h2>
+    <p id="patMsg" class="err-line" role="status"></p>
+    <div id="patSetPad"></div>
+    <div class="sheet-actions">
+      <button id="patCancel" class="btn" type="button" data-i18n="cancel">Cancel</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="confirmSheet" class="sheet" aria-label="Confirm">
+  <div class="sheet-inner">
+    <div class="grab"></div>
+    <form method="dialog">
+      <h2 id="cfTitle"></h2>
+      <p id="cfMsg"></p>
+      <div class="sheet-actions">
+        <button class="btn" value="cancel" data-i18n="cancel">Cancel</button>
+        <button id="cfOk" class="btn danger-fill" value="ok">Delete</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<div id="toast" role="status"></div>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
